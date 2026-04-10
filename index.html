@@ -257,6 +257,136 @@
   .reveal.visible { opacity: 1; transform: none; }
   .reveal-delay { transition-delay: .15s; }
   .reveal-delay2 { transition-delay: .3s; }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 6px;
+    width: 40px; height: 40px; flex-shrink: 0;
+  }
+  .hamburger span {
+    display: block; height: 2px; width: 24px;
+    background: var(--navy); border-radius: 2px;
+    transition: transform .3s, opacity .3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 68px; left: 0; right: 0; z-index: 99;
+    background: rgba(255,255,255,0.99); box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    padding: 20px 24px 24px; flex-direction: column; gap: 6px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-nav-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .mobile-nav-links a {
+    display: block; padding: 12px 8px; text-decoration: none;
+    color: var(--text-muted); font-size: .95rem; font-weight: 500;
+    border-bottom: 1px solid var(--off-white); transition: color .2s;
+  }
+  .mobile-nav-links a.active { color: var(--navy); font-weight: 600; }
+  .mobile-nav-links a:hover { color: var(--navy); }
+
+  /* ── MOBILE BREAKPOINTS ── */
+  @media (max-width: 768px) {
+    /* Nav */
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .desktop-only { display: none !important; }
+    .hamburger { display: flex; }
+
+    /* Hero */
+    .hero { height: 220px; }
+    .hero-content h1 { font-size: 2rem; padding: 0 16px; }
+
+    /* About intro — stack vertically */
+    .about-intro {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 40px 20px;
+    }
+    .about-left h2 { font-size: 1.6rem; }
+    .about-photos {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 160px 160px;
+    }
+
+    /* Services strip */
+    .services-strip {
+      padding: 24px 16px;
+      border-radius: 20px 20px 0 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: -20px;
+    }
+    .svc-item { padding: 10px 6px; }
+    .svc-icon-wrap { width: 42px; height: 42px; }
+    .svc-icon-wrap svg { width: 22px; height: 22px; }
+    .svc-label { font-size: .68rem; max-width: 70px; }
+
+    /* Rehab section */
+    .rehab-section {
+      padding: 40px 20px;
+      border-radius: 20px 20px 0 0;
+      margin-top: -20px;
+    }
+    .section-title { font-size: 1.5rem; margin-bottom: 24px; }
+    .rehab-card { height: 210px; }
+    .rehab-card-overlay h3 { font-size: 1.1rem; }
+    .rehab-card-overlay p { font-size: .8rem; }
+
+    /* Team section */
+    .team-section {
+      padding: 40px 20px;
+      border-radius: 20px 20px 0 0;
+      margin-top: -20px;
+    }
+    .team-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    /* Make the 3rd card span full width so it's centered */
+    .team-card:last-child { grid-column: 1 / -1; max-width: 200px; margin: 0 auto; }
+
+    /* Reviews */
+    .reviews-section {
+      padding: 40px 20px;
+      border-radius: 20px 20px 0 0;
+      margin-top: -20px;
+    }
+    .reviews-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .reviews-left h2 { font-size: 1.5rem; }
+    /* Show only 1 card at a time on mobile */
+    .reviews-slider-wrap { overflow: hidden; }
+
+    /* Footer */
+    footer {
+      grid-template-columns: 1fr 1fr;
+      padding: 40px 20px 24px;
+      gap: 28px;
+    }
+    .footer-brand { grid-column: 1 / -1; }
+    .footer-bottom { margin-top: 0; }
+  }
+
+  @media (max-width: 420px) {
+    .services-strip { grid-template-columns: repeat(2, 1fr); }
+    .about-photos {
+      grid-template-columns: 1fr;
+      grid-template-rows: 200px 150px 150px;
+    }
+    .photo-tall { grid-column: 1; grid-row: 1; }
+    .photo-tr  { grid-column: 1; grid-row: 2; }
+    .photo-br  { grid-column: 1; grid-row: 3; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .team-card:last-child { grid-column: 1 / -1; max-width: 180px; }
+    footer { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -280,8 +410,22 @@
     <li><a href="services.html">Services</a></li>
     <li><a href="#">Blog</a></li>
   </ul>
-  <button class="nav-cta">Book An Appointment</button>
+  <button class="nav-cta desktop-only">Book An Appointment</button>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="mobile-nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">About Us</a></li>
+    <li><a href="#">Join Us</a></li>
+    <li><a href="#">Booking</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <button class="nav-cta" style="width:100%;margin-top:8px;">Book An Appointment</button>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -521,6 +665,19 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ── Hamburger menu ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  // Close menu on link click
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }));
+
   // ── Scroll reveal ──
   const reveals = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver(entries => {
@@ -533,14 +690,15 @@
   const cards    = Array.from(track.querySelectorAll('.review-card'));
   const dotsWrap = document.getElementById('revDots');
   const GAP      = 18;
-  const VISIBLE  = 2;
+  const isMobile = () => window.innerWidth <= 768;
   const TOTAL    = cards.length;
-  const STEPS    = TOTAL - VISIBLE + 1;
+  const getVisible = () => isMobile() ? 1 : 2;
+  const getSteps  = () => TOTAL - getVisible() + 1;
   let current    = 0;
   let autoTimer;
 
   // Build dots
-  for (let i = 0; i < STEPS; i++) {
+  for (let i = 0; i < TOTAL; i++) {
     const d = document.createElement('button');
     d.className = 'rev-dot' + (i === 0 ? ' active' : '');
     d.addEventListener('click', () => { goTo(i); resetAuto(); });
@@ -548,22 +706,33 @@
   }
   const dots = Array.from(dotsWrap.querySelectorAll('.rev-dot'));
 
-  function updateActive() {
-    cards.forEach((c, i) => {
-      c.classList.toggle('active', i === current || i === current + 1);
+  function updateDots() {
+    const steps = getSteps();
+    dots.forEach((d, i) => {
+      d.style.display = i < steps ? '' : 'none';
+      d.classList.toggle('active', i === current);
     });
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function updateActive() {
+    const visible = getVisible();
+    cards.forEach((c, i) => {
+      c.classList.toggle('active', i >= current && i < current + visible);
+    });
+    updateDots();
   }
 
   function setCardWidths() {
+    const visible = getVisible();
     const wrapW = track.parentElement.getBoundingClientRect().width;
-    const cardW = (wrapW - GAP) / 2;
+    const cardW = visible === 1 ? wrapW : (wrapW - GAP) / 2;
     cards.forEach(c => c.style.width = cardW + 'px');
     return cardW;
   }
 
   function goTo(idx) {
-    current = ((idx % STEPS) + STEPS) % STEPS;
+    const steps = getSteps();
+    current = ((idx % steps) + steps) % steps;
     const cardW = setCardWidths();
     track.style.transform = 'translateX(-' + (current * (cardW + GAP)) + 'px)';
     updateActive();
